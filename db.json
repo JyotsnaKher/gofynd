@@ -1,4 +1,4 @@
-[{
+{
     "id": 1,
     "name": "Sports",
     "image_url": "assets/images/sports.jpg"
@@ -10,4 +10,4 @@
     "id": 3,
     "name": "Animals",
     "image_url": "assets/images/animals.jpg"
-}]
+}
