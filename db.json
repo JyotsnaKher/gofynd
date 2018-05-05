@@ -10,8 +10,4 @@
     "id": 3,
     "name": "Animals",
     "image_url": "assets/images/animals.jpg"
-}, {
-    "id": 4,
-    "name": "Business",
-    "image_url": "assets/images/business.jpg"
 }]
