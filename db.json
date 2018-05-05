@@ -10,4 +10,20 @@
     "id": 3,
     "name": "Animals",
     "image_url": "assets/images/animals.jpg"
-}
+}, {
+    "id": 4,
+    "name": "Business",
+    "image_url": "assets/images/business.jpg"
+}, {
+    "id": 5,
+    "name": "Cats",
+    "image_url": "assets/images/cats.jpg"
+}, {
+    "id": 6,
+    "name": "Nightlife",
+    "image_url": "assets/images/nightlife.jpg"
+}, {
+    "id": 7,
+    "name": "Fashion",
+    "image_url": "assets/images/fashion.jpg"
+}]
