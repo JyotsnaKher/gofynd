@@ -1,4 +1,4 @@
-[
+{ "cards" :[
       {
     "id": 1,
     "name": "Sports",
@@ -16,3 +16,4 @@
     "name": "Business",
     "image_url": "assets/images/business.jpg"
 }]
+}
