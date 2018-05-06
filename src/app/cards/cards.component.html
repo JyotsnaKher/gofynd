@@ -1,0 +1,139 @@
+<!--Looping through cards in API Start-->
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12 mb-4">
+      <nav>
+        <button type="button" class="btn btn-primary float-right" (click)="openSm(contentadd)"> + Add Cards </button>
+      </nav>
+    </div>
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xsm-12 mb-4" *ngFor="let card of cards">
+      <div class="card">
+        <div class="card-img-block position-relative">
+          <img class="card-img" src="{{card.image_url}}" alt="{{card.name}}">
+          <div class="overlay">
+            <fa name="pencil" class="h4 edit-icon" (click)="getSelectedCard(card.id, contentupdate)"></fa>
+            <button type="button" class="close" aria-label="Close" (click)="getSelectedCard(card.id, contentdelete)">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{card.name}}</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Looping through cards in API End-->
+
+<!--Add Card Pop Up Start-->
+<ng-template #contentadd let-c="close" let-d="dismiss">
+  <form [formGroup]="cardForm" (ngSubmit)="addCard(cardForm.value)">
+    <div class="modal-header">
+      <h5 class="modal-title">Add Card</h5>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="col-md-12">
+        <div class="alert alert-success" *ngIf="successmsg">
+          Card
+          <strong>"{{name}}"</strong> successfully added!
+        </div>
+        <div class="form-group mt-2">
+          <img [src]="default_img" style="width:100%; height: auto; margin: 0 0 20px 0;">
+          <input type="file" id="imageurl" #imageurl (change)="handleFileInput($event,$event.target.files)">
+        </div>
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" placeholder="Enter Name" formControlName="name">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" [disabled]="cardForm.invalid || loading" class="btn btn-outline-primary">Add Card
+        <i class="fa fa-spinner fa-spin fa-fw" *ngIf="loading"></i>
+      </button>
+      <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+    </div>
+  </form>
+</ng-template>
+<!--Add Card Pop Up End-->
+
+<!--Update Card Pop Up Start-->
+<ng-template #contentupdate let-c="close" let-d="dismiss">
+  <div *ngFor="let scard of selectedCard">
+    <form [formGroup]="updateForm" (ngSubmit)="updateCard(updateForm.value)">
+      <div class="modal-header">
+        <h5 class="modal-title">Update Card</h5>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="alert alert-success" *ngIf="successmsg">
+              Card successfully updated!
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-img-block position-relative">
+                <img class="card-img" src="{{scard.image_url}}" alt="{{scard.name}}">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">{{scard.name}}</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="card-img-block position-relative">
+                <div class="form-group">
+                  <img [src]="default_img" style="margin: 0 0 20px 0;" class="card-img">
+                  <input type="file" id="imageurl" #imageurl (change)="handleFileInput($event,$event.target.files)" style="margin: 0 10px 20px;">
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" class="form-control" placeholder="Enter Name" formControlName="name" id="name">
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" [disabled]="updateForm.invalid || loading" class="btn btn-outline-primary">Update Card
+          <i class="fa fa-spinner fa-spin fa-fw" *ngIf="loading"></i>
+        </button>
+        <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+<!--Update Card Pop Up End-->
+
+<!--Delete Card Pop Up Start-->
+<ng-template #contentdelete let-c="close" let-d="dismiss">
+    <div *ngFor="let scard of selectedCard">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Card</h5>
+          <button type="button" class="close" aria-label="Close" (click)="d('Cross click')" #closeBtn>
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete card <strong>{{scard.name}}</strong>?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-outline-primary" (click)="deleteCard(scard.id,scard.name)" #closeBtn>Delete Card</button>
+          <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Close</button>
+        </div>
+    </div>
+  </ng-template>
+  <!--Update Card Pop Up End-->
