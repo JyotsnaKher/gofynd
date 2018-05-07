@@ -2,6 +2,14 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.0.
 
+## Steps to setup
+
+1. Go the the path you want to download the project.
+2. Run `git clone https://github.com/JyotsnaKher/gofynd.git`.
+3. Run `npm install` first after checkout to download all the dependant node modules.
+4. Run `json-server --watch db.json` to get the fake REST API.
+5. Run `ng serve --open` to view the project.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
