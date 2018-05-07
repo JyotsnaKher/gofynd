@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-cards',
@@ -24,11 +26,18 @@ export class CardsComponent implements OnInit {
   cardForm: FormGroup;
   updateForm: FormGroup;
   loading: boolean = false;
-  successmsg: boolean = false;
+  successmsgadd: boolean = false;
+  successmsgupdate: boolean = false;
+  successmsgdelete: boolean = false;
+  modalReference: NgbModalRef;
 
   @ViewChild('imageurl') imageurl: ElementRef;
-  @ViewChild('closeBtn') closeBtn: ElementRef;
  
+  private success = new Subject<string>();
+  staticAlertClosed = false;
+  successMessage: string;
+  alertname: string;
+
   constructor(private modalService: NgbModal, private http: HttpClient, private fb: FormBuilder) {
     /* Add Card Form Validation */
     this.cardForm = this.fb.group({
@@ -39,6 +48,13 @@ export class CardsComponent implements OnInit {
 
   ngOnInit() {
     this.showCards();
+
+    /* Modal close setting */
+    setTimeout(() => this.staticAlertClosed = true, 9000);
+    this.success.subscribe((message) => this.successMessage = message);
+    this.success.pipe(
+      debounceTime(6000)
+    ).subscribe(() => this.successMessage = null);
   }
 
   /* Get cards to show */
@@ -69,33 +85,35 @@ export class CardsComponent implements OnInit {
 
   /* Add Card Pop Up */
   openSm(contentadd) {
-    this.modalService.open(contentadd, { size: 'sm' });
-    this.successmsg = false;
+    this.modalReference = this.modalService.open(contentadd, { size: 'sm' });
+    this.modalReference.result.then((result) => {
+      this.closeResult = 'Closed with: ${result}';
+    }, (reason) => {
+      this.closeResult = 'Dismissed ${this.getDismissReason(reason)}';
+    });
     this.default_img = "assets/images/default.jpg";
     this.cardForm.reset();
   }
 
   /* Add Card */
   addCard(cardFormValue) {
-    console.log(cardFormValue);
     this.loading = true;
-    this.successmsg = false;
-    console.log(cardFormValue.name, cardFormValue.imageurl.name);
     this.http.post(this.url, {
       name: cardFormValue.name,
       image_url: this.default_img
     }).subscribe((data: any) => {
+      this.loading = false;
+      this.closeModal();     
+      this.alertname = cardFormValue.name;
+      const addSuccess = "added";
+      this.success.next(addSuccess);
+      this.scrolltop();
       this.showCards();
     });
-    setTimeout(() => {
-      this.loading = false;
-      this.successmsg = true;
-    }, 1000);
   }
 
   /* Card Selected to Update*/
   getSelectedCard(id, content) {
-    this.successmsg = false;
     this.open(content);
     this.id = id;
     const params = new HttpParams().set('id', id);
@@ -114,8 +132,12 @@ export class CardsComponent implements OnInit {
 
   /* Update Card Pop Up */
   open(content) {
-    this.modalService.open(content);
-    this.successmsg = false;
+    this.modalReference = this.modalService.open(content);
+    this.modalReference.result.then((result) => {
+      this.closeResult = 'Closed with: ${result}';
+    }, (reason) => {
+      this.closeResult = 'Dismissed ${this.getDismissReason(reason)}';
+    });
     this.default_img = "assets/images/default.jpg";
   }
 
@@ -125,15 +147,36 @@ export class CardsComponent implements OnInit {
       name: updateFormValue.name,
       image_url: this.default_img
     }).subscribe((data: any) => {
-      this.successmsg = true;
+      this.successmsgadd = false;
+      this.closeModal();
+      this.alertname = updateFormValue.name;
+      const updateSuccess = "updated";
+      this.success.next(updateSuccess);
+      this.scrolltop();
       this.showCards();
     });
   }
 
   /* Delete Card */
   deleteCard(id, name) {
-      return this.http.delete(this.url + id).subscribe((data: any[]) => {
-        this.showCards();
-      });
+    return this.http.delete(this.url + id).subscribe((data: any[]) => {
+      this.closeModal();
+      this.alertname = name;
+      const deleteSuccess = "deleted";
+      this.success.next(deleteSuccess);
+      this.scrolltop();
+      this.showCards();
+    });
   }
+
+  /* Close Modal */
+  closeModal() {
+    this.modalReference.close();
+  }
+
+  /* Scroll Top */
+  scrolltop() {
+    window.scroll({ top: 0, behavior: 'smooth' })
+  }
+
 }

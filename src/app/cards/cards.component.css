@@ -22,3 +22,36 @@
   left: 50%;
   transform: translate(-50%, -50%);
 cursor: pointer;}
+
+input[type="file"]::-ms-value {
+    width:144px;
+    border:none;
+    background: none;
+    height: 30px;
+}
+
+input[type="file"]::-ms-browse {
+    border:none;
+    background: none;
+    height: 30px;
+}
+
+.update-input input[type="file"]::-ms-value {
+    width:105px;
+}
+
+@media (max-width: 575.98px) {
+ .card-img-block{
+     text-align: center;
+    }
+.card-img{
+    max-width: 100%;
+    width: auto;
+}
+.card-body{
+    border-top:1px solid rgba(0,0,0,.125);
+}
+.card-title{
+    text-align: center;
+}
+}
