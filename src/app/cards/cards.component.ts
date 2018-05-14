@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { NgbModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -14,7 +13,6 @@ import { debounceTime } from 'rxjs/operators';
 export class CardsComponent implements OnInit {
 
   cards: any = [];
-  selectedcard: any = [];
   name: string;
   image_url: string;
   closeResult: string;
@@ -26,9 +24,6 @@ export class CardsComponent implements OnInit {
   cardForm: FormGroup;
   updateForm: FormGroup;
   loading: boolean = false;
-  successmsgadd: boolean = false;
-  successmsgupdate: boolean = false;
-  successmsgdelete: boolean = false;
   modalReference: NgbModalRef;
 
   @ViewChild('imageurl') imageurl: ElementRef;
@@ -69,7 +64,7 @@ export class CardsComponent implements OnInit {
       });
   }
 
-  /*Preview Preview Uploaded Image */
+  /*Preview Uploaded Image */
   handleFileInput(event, file: FileList) {
     if (event.target.files.length > 0) {
       let file = event.target.files[0];
@@ -147,7 +142,6 @@ export class CardsComponent implements OnInit {
       name: updateFormValue.name,
       image_url: this.default_img
     }).subscribe((data: any) => {
-      this.successmsgadd = false;
       this.closeModal();
       this.alertname = updateFormValue.name;
       const updateSuccess = "updated";
